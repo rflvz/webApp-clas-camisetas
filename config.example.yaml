@@ -1,0 +1,170 @@
+# Configuración Global del Pipeline de Clustering
+
+project:
+  name: "clustering-camisetas"
+  version: "1.0.0"
+  seed: 42  # Para reproducibilidad
+
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  data_metadata: "data/metadata"
+  models: "models"
+  outputs: "outputs"
+  plots: "outputs/plots"
+  cluster_samples: "outputs/plots/cluster_samples"
+  reports: "outputs/reports"
+  logs: "logs"
+
+image_preprocessing:
+  enabled: true  # Activar pre-procesamiento
+  method: "composition"  # Opciones: none, high_frequency, composition, frequency, texture
+  high_frequency:
+    blur_radius: 2.5
+    edge_boost: 1.6
+    base_blend: 0.6
+    contrast_factor: 1.1
+  texture:
+    # La técnica texture no requiere parámetros configurables
+    # Usa filtro Laplaciano con combinación 50% original, 50% laplaciano
+  # composition: Estructura compositiva (combina bordes 60% y texturas 40%)
+  # No requiere parámetros configurables
+  # frequency: Análisis de frecuencia FFT (detecta patrones repetitivos)
+  # No requiere parámetros configurables
+  cache_by_method: true  # Separar caché por método de pre-procesamiento
+
+model:
+  # Tipo de modelo de embeddings a usar
+  embedding_type: "clip"  # "clip" o "dinov2" - Por defecto: "clip" (compatibilidad hacia atrás)
+  
+  # Configuración para modelos CLIP
+  # Modelos CLIP disponibles:
+  # - openai/clip-vit-base-patch32 (512D) - Rápido, menor calidad
+  # - openai/clip-vit-base-patch16 (512D) - Rápido, mejor calidad que patch32
+  # - openai/clip-vit-large-patch14 (768D) - Más lento, mejor calidad
+  # - openai/clip-vit-large-patch14-336 (768D) - Más lento, mejor calidad, imágenes más grandes
+  clip_model: "openai/clip-vit-base-patch32"  # Modelo CLIP por defecto
+  
+  # Configuración para modelos DINOv2
+  # Modelos DINOv2 disponibles:
+  # - facebook/dinov2-base (768D) - Balance entre velocidad y calidad
+  # - facebook/dinov2-small (384D) - Más rápido, menor calidad
+  # - facebook/dinov2-large (1024D) - Más lento, mejor calidad
+  dinov2_model: "facebook/dinov2-base"  # Modelo DINOv2 por defecto
+  
+  device: "cpu"  # Forzar CPU (no asumir GPU)
+  batch_size: 16  # Para procesamiento de imágenes
+
+clustering:
+  algorithm: "hdbscan"
+  min_cluster_size: 6  # Balanceado: permite clusters pero puede generar algunos outliers
+  min_samples: 2  # Moderado: permite clusters pero puede generar algunos outliers
+  metric: "euclidean"
+  cluster_selection_epsilon: 0.0  # 0 = máxima granularidad de clusters
+  max_retries: 2  # Reintentos si métricas inaceptables
+  
+  # Agrupación jerárquica (NUEVA funcionalidad)
+  hierarchical_grouping: true  # Agrupar subclusters en clusters grandes
+  max_inter_cluster_distance: 0.35  # Distancia más permisiva para generar menos clusters (4-8)
+  
+  # Re-clustering iterativo para alta cohesión (similitud coseno) - REDUCIDO para más outliers
+  max_reclustering_iterations: 3  # Reducido drásticamente para limitar re-asignación de outliers
+  target_subcluster_cohesion: 0.90  # Muy estricto para marcar más puntos como outliers
+  max_subclusters: 6  # Reducido para generar menos subclusters y más outliers
+  max_outlier_ratio: 0.50  # Aumentado a 50% para sacrificar outliers y aumentar pureza ALVZ
+  forced_outliers:
+    enabled: true  # Forzar un % mínimo de outliers para mejorar pureza ALVZ
+    min_ratio: 0.12  # Queremos al menos 12% outliers
+    max_ratio: 0.22  # Máximo 22% outliers para evitar exceso
+  # Subdivisión de clusters grandes (DESACTIVADA - usar balanced_clustering)
+  subdivide_large_clusters: false
+  subdivision_threshold: 50
+  subdivision_parts: 9
+  # Balanceo inteligente iterativo (NUEVA ESTRATEGIA - PRIORIDAD: HOMOGENEIDAD)
+  balanced_clustering: true  # Fusionar pequeños + dividir grandes
+  balance_min_size: 10  # Mínimo ajustado para dataset más pequeño (115 imágenes)
+  balance_max_size: 30  # Dividir solo clusters grandes NO homogéneos (ajustado para dataset más pequeño)
+  balance_max_iterations: 10  # Iteraciones máximas (asegurar balance completo)
+  cohesion_threshold: 0.65  # Umbral realista basado en cohesión promedio del dataset (0.68)
+  # Outliers dentro de subclusters - MÁS ESTRICTO
+  subcluster_cohesion_threshold: 0.80  # Cohesión MÁS estricta para subclusters (0.75→0.80)
+  min_subcluster_size: 5  # Tamaño mínimo de subcluster válido (más pequeño = más cohesión)
+  min_subcluster_size_exception: 3  # Tamaño mínimo en excepciones (permitir subclusters muy pequeños)
+  subdivide_all_clusters: false  # NO usar subdivisión (jerarquía invertida)
+  
+  # Post-procesamiento para balancear clusters (DNT-55)
+  # CONFIGURADO PARA MAXIMIZAR PUREZA ALVZ - Menos operaciones, más tolerancia a outliers
+  post_processing:
+    enabled: true  # Activar post-procesamiento de balanceo
+    min_cluster_size: 8  # Aumentado para reducir fusiones (prioridad: pureza ALVZ)
+    max_cluster_size: 30  # Aumentado para reducir divisiones (menos splits = más pureza)
+    max_size_ratio: 2.5  # Más permisivo para evitar divisiones innecesarias
+    max_difference: 25  # Más permisivo para reducir operaciones de balanceo
+    target_clusters: 6  # Número objetivo de clusters (aproximado)
+    target_clusters_range: [4, 10]  # Rango más amplio para aceptar clustering inicial
+    initial_clusters_range: [4, 10]  # Rango más amplio para aceptar clustering inicial
+    merge_strategy: "centroid_distance"  # Estrategia de fusión: "centroid_distance" o "similarity"
+    max_merge_distance: 0.5  # Más estricto para reducir fusiones (solo fusionar si muy cercanos)
+    split_strategy: "kmeans"  # Estrategia de división: "kmeans" o "agglomerative"
+    min_split_size: 30  # Aumentado para reducir divisiones (solo dividir clusters muy grandes)
+    min_cohesion_threshold: 0.70  # Más estricto para reducir fusiones (solo fusionar si muy cohesivos)
+    max_iterations: 5  # Reducido para limitar operaciones (prioridad: pureza ALVZ)
+    preserve_quality: true  # Activar para preservar calidad y reducir operaciones
+    force_merge_small: false  # Desactivado para reducir fusiones automáticas
+
+validation:
+  min_images_processed: 100  # Ajustado para 115 imágenes disponibles
+  min_silhouette_score: 0.01  # Acepta overlap entre estilos
+  max_outlier_percentage: 40.0  # Aumentado para sacrificar outliers y aumentar pureza ALVZ
+  expected_cluster_range: [4, 10]  # Rango más amplio para aceptar clustering inicial (prioridad: pureza ALVZ)
+
+visualization:
+  umap_n_neighbors: 15
+  umap_min_dist: 0.1
+  umap_metric: "euclidean"
+  umap_random_state: 42
+  plot_dpi: 150
+  sample_images_per_cluster: 10
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_mode: "a"
+
+performance:
+  max_pipeline_time_minutes: 20
+
+# Configuración de caché de embeddings
+cache:
+  enabled: true
+  cache_dir: "data/embeddings/cache"
+  hash_algorithm: "sha256"  # "sha256" o "md5"
+
+# Configuración de batch size dinámico
+dynamic_batch:
+  enabled: true
+  min_batch_size: 4
+  max_batch_size: 32
+
+# Configuración de pre-procesamiento de imágenes
+# Permite priorizar composición visual y estilo de patrón en el clustering
+# NOTA: 'preprocessing' está deprecated, usar 'image_preprocessing' en su lugar
+preprocessing:
+  enabled: false  # Activar/desactivar pre-procesamiento (por defecto: desactivado)
+  method: "none"  # Método de pre-procesamiento a usar:
+                 # - "none": Sin pre-procesamiento (por defecto)
+                 # - "edge_canny": Detección de bordes tipo Canny (prioriza composición)
+                 # - "edge_sobel": Detección de bordes Sobel (prioriza patrones)
+                 # - "high_frequency": Énfasis en alta frecuencia (prioriza texturas finas)
+                 # - "texture": Realce de texturas (prioriza estilo de patrón)
+                 # - "frequency": Análisis de frecuencia FFT (prioriza patrones repetitivos)
+                 # - "composition": Estructura compositiva (prioriza distribución espacial)
+                 # - "pattern_focus": Escala de grises con enfoque en patrones (balanceado)
+
+# NOTA: La configuración de image_preprocessing está en la línea 19
+# Esta sección duplicada ha sido eliminada para evitar conflictos
+
+# Configuración de paralelización
+parallelization:
+  enabled: true
+  num_workers: null  # null = auto-detecta 75% de cores disponibles
