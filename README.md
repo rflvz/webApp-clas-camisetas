@@ -126,6 +126,40 @@ npm run test:coverage
 npm run test:e2e
 ```
 
+## 📁 Estructura del Proyecto
+
+```
+src/
+├── app/                    # App Router de Next.js
+│   ├── layout.tsx         # Layout principal
+│   └── page.tsx           # Página de inicio
+├── components/            # Componentes React reutilizables
+│   ├── ui/               # Componentes UI básicos (Button, Input, etc.)
+│   ├── layout/           # Componentes de layout (Header, Footer, etc.)
+│   ├── forms/            # Componentes de formularios
+│   ├── clustering/       # Componentes específicos de clustering
+│   └── index.ts          # Exportaciones centralizadas
+├── hooks/                # Custom hooks de React
+├── lib/                  # Utilidades y configuraciones
+├── types/                # Definiciones de tipos TypeScript
+├── utils/                # Funciones utilitarias
+├── styles/               # Estilos globales y CSS
+├── constants/            # Constantes de la aplicación
+├── services/             # Servicios y lógica de negocio
+└── context/              # Contextos de React
+```
+
+### Paths Absolutos Configurados
+
+El proyecto utiliza paths absolutos para imports más limpios:
+
+```typescript
+// En lugar de: import { Button } from '../../../components/Button'
+import { Button } from '@/components/Button'
+import { ClusteringService } from '@/services/clustering'
+import { CLUSTERING_PRESETS } from '@/constants'
+```
+
 ## 📚 Documentación
 
 - [Arquitectura del Proyecto](./docs/architecture.md)

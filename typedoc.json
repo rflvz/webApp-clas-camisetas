@@ -1,0 +1,75 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/components/index.ts",
+    "src/hooks/index.ts",
+    "src/lib/index.ts",
+    "src/types/index.ts",
+    "src/utils/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs/api-docs",
+  "theme": "default",
+  "name": "Interfaz Web para Motor de Clustering HDBSCAN - API Documentation",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "excludeNotDocumented": false,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": false,
+  "readme": "README.md",
+  "plugin": [],
+  "sort": ["source-order"],
+  "kindSortOrder": [
+    "Document",
+    "Project",
+    "Module",
+    "Namespace",
+    "Enum",
+    "EnumMember",
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Constructor",
+    "Property",
+    "Variable",
+    "Function",
+    "Accessor",
+    "Method",
+    "Parameter",
+    "TypeParameter",
+    "TypeLiteral",
+    "CallSignature",
+    "ConstructorSignature",
+    "IndexSignature",
+    "GetSignature",
+    "SetSignature"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Components",
+    "Hooks",
+    "Types",
+    "Utilities",
+    "Services",
+    "*"
+  ],
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://github.com/rflvz/webApp-clas-camisetas",
+  "navigationLinks": {
+    "GitHub": "https://github.com/rflvz/webApp-clas-camisetas",
+    "Linear Project": "https://linear.app/clasificadoria/project/interfaz-web-para-motor-de-clustering-hdbscan-ba3ef12aca6f"
+  },
+  "sidebarLinks": {
+    "Documentación": "https://github.com/rflvz/webApp-clas-camisetas/tree/main/docs",
+    "Contribuir": "https://github.com/rflvz/webApp-clas-camisetas/blob/main/docs/contributing.md"
+  },
+  "hideGenerator": false,
+  "customCss": "./docs/typedoc-custom.css",
+  "markedOptions": {
+    "mangle": false
+  }
+}

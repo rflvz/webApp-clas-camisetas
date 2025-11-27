@@ -19,6 +19,9 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
+    "docs:generate": "typedoc",
+    "docs:serve": "typedoc --watch",
+    "docs:clean": "rimraf docs/api-docs",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -54,7 +57,9 @@
     "@playwright/test": "^1.40.0",
     "husky": "^8.0.0",
     "@commitlint/cli": "^18.0.0",
-    "@commitlint/config-conventional": "^18.0.0"
+    "@commitlint/config-conventional": "^18.0.0",
+    "typedoc": "^0.25.0",
+    "rimraf": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
