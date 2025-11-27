@@ -30,6 +30,7 @@ Interfaz web moderna construida con Next.js que proporciona una interfaz sofisti
 ### Desarrollo y Calidad
 - **ESLint**: Linting de código
 - **Prettier**: Formateo de código
+- **TypeDoc**: Generación de documentación automática
 - **Jest**: Testing unitario
 - **Playwright**: Testing end-to-end
 - **Husky**: Git hooks
@@ -193,6 +194,227 @@ export function Component({ prop1, prop2 }: ComponentProps) {
   );
 }
 ```
+
+### 📚 Documentación con TypeDoc
+
+**REGLA OBLIGATORIA**: Todo código público debe estar documentado con comentarios JSDoc compatibles con TypeDoc.
+
+#### Documentación de Funciones
+```typescript
+/**
+ * Valida los parámetros de clustering HDBSCAN
+ * 
+ * @param params - Los parámetros de clustering a validar
+ * @param options - Opciones adicionales de validación
+ * @returns Resultado de la validación con errores si los hay
+ * 
+ * @example
+ * ```typescript
+ * const result = validateClusterParams({
+ *   min_cluster_size: 6,
+ *   min_samples: 2
+ * });
+ * 
+ * if (result.isValid) {
+ *   console.log('Parámetros válidos');
+ * }
+ * ```
+ * 
+ * @throws {ValidationError} Cuando los parámetros son inválidos
+ * @since 1.0.0
+ * @category Validation
+ */
+export function validateClusterParams(
+  params: ClusterParams,
+  options?: ValidationOptions
+): ValidationResult {
+  // Implementación
+}
+```
+
+#### Documentación de Componentes React
+```typescript
+/**
+ * Componente para configurar parámetros de clustering
+ * 
+ * @component
+ * @param props - Las propiedades del componente
+ * @returns Elemento JSX del formulario de clustering
+ * 
+ * @example
+ * ```tsx
+ * <ClusterForm
+ *   initialParams={defaultParams}
+ *   onSubmit={handleSubmit}
+ *   mode="advanced"
+ * />
+ * ```
+ * 
+ * @category Components
+ * @subcategory Forms
+ */
+export function ClusterForm({ 
+  initialParams, 
+  onSubmit, 
+  mode 
+}: ClusterFormProps) {
+  // Implementación
+}
+
+/**
+ * Props para el componente ClusterForm
+ * 
+ * @interface ClusterFormProps
+ * @category Types
+ */
+interface ClusterFormProps {
+  /** Parámetros iniciales del formulario */
+  initialParams?: ClusterParams;
+  
+  /** Callback ejecutado al enviar el formulario */
+  onSubmit: (params: ClusterParams) => void;
+  
+  /** Modo de configuración del formulario */
+  mode: 'basic' | 'advanced' | 'expert';
+}
+```
+
+#### Documentación de Custom Hooks
+```typescript
+/**
+ * Hook para gestionar el estado de parámetros de clustering
+ * 
+ * @param initialParams - Parámetros iniciales
+ * @returns Estado y funciones para gestionar parámetros
+ * 
+ * @example
+ * ```typescript
+ * const { params, updateParam, validateParams, isValid } = useClusterParams({
+ *   min_cluster_size: 6
+ * });
+ * 
+ * updateParam('min_samples', 3);
+ * ```
+ * 
+ * @category Hooks
+ */
+export function useClusterParams(initialParams: ClusterParams) {
+  // Implementación
+}
+```
+
+#### Documentación de Tipos y Interfaces
+```typescript
+/**
+ * Parámetros de configuración para el algoritmo HDBSCAN
+ * 
+ * @interface ClusterParams
+ * @category Types
+ * @subcategory Clustering
+ */
+export interface ClusterParams {
+  /** Tamaño mínimo de cluster (2-1000) */
+  min_cluster_size: number;
+  
+  /** Número mínimo de muestras (1-100) */
+  min_samples: number;
+  
+  /** Métrica de distancia utilizada */
+  metric: 'euclidean' | 'manhattan' | 'cosine';
+  
+  /** 
+   * Epsilon para selección de clusters
+   * @defaultValue 0.0
+   */
+  cluster_selection_epsilon?: number;
+}
+
+/**
+ * Resultado de validación de parámetros
+ * 
+ * @interface ValidationResult
+ * @category Types
+ * @subcategory Validation
+ */
+export interface ValidationResult {
+  /** Indica si la validación fue exitosa */
+  isValid: boolean;
+  
+  /** Lista de errores encontrados */
+  errors: ValidationError[];
+  
+  /** Advertencias no críticas */
+  warnings?: string[];
+}
+```
+
+#### Documentación de Constantes
+```typescript
+/**
+ * Presets predefinidos para clustering
+ * 
+ * @constant CLUSTERING_PRESETS
+ * @category Constants
+ */
+export const CLUSTERING_PRESETS = {
+  /** Configuración rápida con menor precisión */
+  FAST: 'fast',
+  
+  /** Configuración balanceada entre velocidad y precisión */
+  BALANCED: 'balanced',
+  
+  /** Configuración precisa con mayor tiempo de procesamiento */
+  PRECISE: 'precise',
+} as const;
+```
+
+#### Tags JSDoc Obligatorios
+
+**Para Funciones:**
+- `@param` - Descripción de cada parámetro
+- `@returns` - Descripción del valor de retorno
+- `@example` - Ejemplo de uso (obligatorio)
+- `@throws` - Excepciones que puede lanzar (si aplica)
+- `@category` - Categoría para organización
+
+**Para Componentes React:**
+- `@component` - Marca como componente React
+- `@param props` - Descripción de las props
+- `@returns` - Descripción del JSX retornado
+- `@example` - Ejemplo de uso JSX (obligatorio)
+- `@category Components`
+
+**Para Hooks:**
+- `@param` - Parámetros del hook
+- `@returns` - Objeto o valor retornado
+- `@example` - Ejemplo de uso (obligatorio)
+- `@category Hooks`
+
+**Para Tipos/Interfaces:**
+- `@interface` o `@type` - Tipo de definición
+- `@category Types`
+- `@subcategory` - Subcategoría específica
+
+#### Scripts de Documentación
+```bash
+# Generar documentación
+npm run docs:generate
+
+# Generar y servir en modo watch
+npm run docs:serve
+
+# Limpiar documentación anterior
+npm run docs:clean
+```
+
+#### Reglas de Calidad de Documentación
+1. **Obligatorio**: Toda función, componente, hook e interfaz pública debe tener JSDoc
+2. **Ejemplos**: Todo debe incluir al menos un ejemplo de uso funcional
+3. **Categorización**: Usar `@category` y `@subcategory` para organización
+4. **Descripción clara**: Explicar qué hace, no cómo lo hace
+5. **Parámetros completos**: Documentar todos los parámetros y sus tipos
+6. **Valores de retorno**: Explicar qué retorna la función
+7. **Excepciones**: Documentar errores que puede lanzar con `@throws`
 
 ### Validación con Zod
 ```typescript
@@ -560,10 +782,10 @@ function useRealtimeValidation(schema, data) {
 
 1. **Siempre usar TypeScript**: Todo código debe estar tipado
 2. **Validación obligatoria**: Usar Zod para toda validación de datos
-3. **Componentes modulares**: Preferir compound components y custom hooks
-4. **Performance first**: Usar memoización y code splitting cuando sea necesario
-5. **Testing obligatorio**: Todo código nuevo debe tener tests
-6. **Documentación**: Documentar funciones complejas y APIs
+3. **Documentación TypeDoc obligatoria**: Todo código público debe tener JSDoc completo con ejemplos
+4. **Componentes modulares**: Preferir compound components y custom hooks
+5. **Performance first**: Usar memoización y code splitting cuando sea necesario
+6. **Testing obligatorio**: Todo código nuevo debe tener tests
 7. **Convenciones de naming**: Seguir las convenciones establecidas
 8. **Git flow**: Usar branches feature/DNT-XXX para todo desarrollo
 9. **Commits semánticos**: Seguir conventional commits
