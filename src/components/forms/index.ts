@@ -1,4 +1,10 @@
-// Exportaciones centralizadas de componentes de formularios
+/**
+ * @fileoverview Exportaciones centralizadas de componentes de formularios
+ * @module components/forms
+ */
+
+// Placeholder para evitar errores de módulo vacío
+export const FORM_COMPONENTS_PLACEHOLDER = 'form-components';
 
 // Futuros componentes de formularios
 // export { Form } from './Form';

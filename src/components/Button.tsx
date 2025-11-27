@@ -4,6 +4,38 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import type { ButtonProps } from '@/types';
 
+/**
+ * Componente Button reutilizable con múltiples variantes y estados
+ * 
+ * Proporciona un botón altamente personalizable con soporte para diferentes
+ * variantes visuales, tamaños, estados de carga y accesibilidad completa.
+ * 
+ * @component
+ * @param props - Propiedades del componente Button
+ * @returns Elemento JSX del botón estilizado
+ * 
+ * @example
+ * ```tsx
+ * // Botón básico
+ * <Button onClick={handleClick}>
+ *   Hacer clic
+ * </Button>
+ * 
+ * // Botón con variante y tamaño
+ * <Button variant="secondary" size="lg" loading={isLoading}>
+ *   Guardar cambios
+ * </Button>
+ * 
+ * // Botón outline deshabilitado
+ * <Button variant="outline" disabled>
+ *   No disponible
+ * </Button>
+ * ```
+ * 
+ * @category Components
+ * @subcategory UI
+ * @since 1.0.0
+ */
 const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
@@ -72,5 +104,6 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
+export { Button };
 export default Button;
 

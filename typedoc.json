@@ -69,7 +69,7 @@
   },
   "hideGenerator": false,
   "customCss": "./docs/typedoc-custom.css",
-  "markedOptions": {
-    "mangle": false
+  "markdownItOptions": {
+    "html": true
   }
 }
