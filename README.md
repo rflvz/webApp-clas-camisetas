@@ -44,10 +44,12 @@ npm run dev
 
 ## 🌳 Flujo de Desarrollo
 
+Este proyecto utiliza **Git Flow Simplificado** para el desarrollo colaborativo. Para información detallada, consulta la [Estrategia de Branching](./docs/branching-strategy.md).
+
 ### Ramas Principales
 
-- `main`: Código de producción estable
-- `develop`: Branch de integración principal
+- **`main`**: Código de producción estable, protegido
+- **`develop`**: Branch de integración principal para desarrollo
 
 ### Crear Nueva Feature
 
@@ -55,33 +57,48 @@ npm run dev
 # Crear branch desde develop
 git checkout develop
 git pull origin develop
-git checkout -b feature/DNT-XXX-descripcion
+git checkout -b feature/DNT-XXX-descripcion-corta
 
 # Hacer cambios y commits
 git add .
 git commit -m "feat(scope): descripción del cambio
 
+- Detalle del cambio 1
+- Detalle del cambio 2
+
 Closes DNT-XXX"
 
-# Push y crear PR
-git push origin feature/DNT-XXX-descripcion
+# Push y crear PR hacia develop
+git push origin feature/DNT-XXX-descripcion-corta
 ```
+
+### Convenciones de Naming
+
+- **Features**: `feature/DNT-XXX-descripcion-kebab-case`
+- **Fixes**: `fix/DNT-XXX-descripcion-kebab-case`
+- **Docs**: `docs/DNT-XXX-descripcion-kebab-case`
+- **Releases**: `release/milestone-X-nombre-corto`
 
 ### Convenciones de Commit
 
 Usamos [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-<tipo>(<scope>): <descripción>
+<tipo>(<scope>): <descripción corta>
 
-[cuerpo opcional]
+<descripción detallada opcional>
 
 Closes DNT-XXX
 ```
 
 **Tipos válidos**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
-**Scopes válidos**: `setup`, `api`, `ui`, `editor`, `validation`, `database`, `test`
+**Scopes válidos**: `setup`, `api`, `ui`, `editor`, `validation`, `database`, `test`, `docs`
+
+### Documentación Completa
+
+- 📋 [Estrategia de Branching](./docs/branching-strategy.md) - Flujo completo de Git
+- 🤝 [Guía de Contribución](./docs/contributing.md) - Cómo contribuir al proyecto
 
 ## 📝 Scripts Disponibles
 
