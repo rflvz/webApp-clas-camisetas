@@ -1,0 +1,572 @@
+# Reglas y Contexto del Proyecto - Interfaz Web para Motor de Clustering HDBSCAN
+
+## 🎯 Contexto del Proyecto
+
+### Descripción General
+Interfaz web moderna construida con Next.js que proporciona una interfaz sofisticada para configurar y gestionar los parámetros del motor de clustering HDBSCAN. El proyecto permite a los usuarios configurar clustering de imágenes de camisetas a través de tres modos de configuración: Básico, Avanzado y Super Avanzado.
+
+### Objetivos del Proyecto
+- Crear una interfaz web intuitiva para configurar parámetros HDBSCAN
+- Proporcionar tres niveles de complejidad para diferentes tipos de usuarios
+- Integrar con motor de clustering existente para procesamiento de imágenes
+- Mantener alta calidad de código y documentación completa
+
+## 🏗️ Stack Tecnológico
+
+### Frontend
+- **Next.js 14+**: Framework React con App Router
+- **TypeScript**: Tipado estático para JavaScript
+- **Tailwind CSS**: Framework de utilidades CSS
+- **React Hook Form**: Manejo de formularios
+- **Zod**: Validación de esquemas y datos
+- **Lucide React**: Iconografía moderna
+
+### Backend
+- **Next.js API Routes**: Endpoints del servidor
+- **PostgreSQL**: Base de datos relacional
+- **Prisma**: ORM para base de datos
+- **Zod**: Validación de datos del servidor
+
+### Desarrollo y Calidad
+- **ESLint**: Linting de código
+- **Prettier**: Formateo de código
+- **Jest**: Testing unitario
+- **Playwright**: Testing end-to-end
+- **Husky**: Git hooks
+- **Commitlint**: Validación de commits
+
+### Deployment
+- **Vercel**: Hosting y deployment
+- **GitHub Actions**: CI/CD pipeline
+- **Docker**: Containerización (opcional)
+
+## 📁 Estructura del Proyecto
+
+```
+app-clas-camisetas/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── layout.tsx         # Layout principal
+│   │   ├── page.tsx           # Página home
+│   │   ├── globals.css        # Estilos globales
+│   │   └── api/               # API Routes
+│   │       ├── clusters/      # Endpoints de clustering
+│   │       ├── presets/       # Endpoints de presets
+│   │       └── validation/    # Endpoints de validación
+│   ├── components/            # Componentes React
+│   │   ├── ui/               # Componentes base (Button, Input, etc.)
+│   │   ├── forms/            # Componentes de formularios
+│   │   ├── editor/           # Componentes del editor
+│   │   └── layout/           # Componentes de layout
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Utilidades y configuraciones
+│   ├── types/                # Definiciones de tipos TypeScript
+│   ├── utils/                # Funciones de utilidad
+│   └── styles/               # Estilos adicionales
+├── docs/                     # Documentación del proyecto
+├── public/                   # Assets estáticos
+├── prisma/                   # Esquemas y migraciones de BD
+├── tests/                    # Tests del proyecto
+├── .github/                  # Templates y workflows
+├── config.example.yaml       # Configuración HDBSCAN de ejemplo
+└── .cursorrules             # Este archivo
+```
+
+## 🎨 Arquitectura y Patrones
+
+### Arquitectura de Componentes
+- **Compound Components**: Para flexibilidad en componentes complejos
+- **Render Props**: Para compartir lógica entre componentes
+- **Custom Hooks**: Para encapsular lógica de estado compleja
+- **Factory Pattern**: Para creación de presets
+- **Strategy Pattern**: Para diferentes estrategias de validación
+- **Observer Pattern**: Para actualizaciones en tiempo real
+
+### Tres Modos de Configuración
+1. **Básico**: Presets predefinidos (Rápido, Balanceado, Preciso)
+2. **Avanzado**: Parámetros principales organizados por categorías
+3. **Super Avanzado**: Control total de todos los parámetros HDBSCAN
+
+### Flujo de Datos
+```
+User Input → Client Validation → Server Validation → Database
+     ↓              ↓                    ↓              ↓
+  Real-time     Form Submit        API Response    Persistence
+  Feedback      Validation         Validation      
+```
+
+## ⚙️ Configuración HDBSCAN
+
+### Parámetros Principales (del config.example.yaml)
+```yaml
+clustering:
+  algorithm: "hdbscan"
+  min_cluster_size: 6          # Tamaño mínimo de cluster
+  min_samples: 2               # Muestras mínimas
+  metric: "euclidean"          # Métrica de distancia
+  cluster_selection_epsilon: 0.0  # Granularidad de clusters
+  max_retries: 2               # Reintentos si métricas inaceptables
+```
+
+### Parámetros Avanzados
+```yaml
+# Agrupación jerárquica
+hierarchical_grouping: true
+max_inter_cluster_distance: 0.35
+
+# Re-clustering iterativo
+max_reclustering_iterations: 3
+target_subcluster_cohesion: 0.90
+max_subclusters: 6
+max_outlier_ratio: 0.50
+
+# Balanceo inteligente
+balanced_clustering: true
+balance_min_size: 10
+balance_max_size: 30
+cohesion_threshold: 0.65
+```
+
+### Post-procesamiento
+```yaml
+post_processing:
+  enabled: true
+  min_cluster_size: 8
+  max_cluster_size: 30
+  target_clusters: 6
+  merge_strategy: "centroid_distance"
+  split_strategy: "kmeans"
+```
+
+## 🔧 Reglas de Desarrollo
+
+### Convenciones de Código
+
+#### Naming Conventions
+- **Componentes**: PascalCase (`ClusterForm.tsx`)
+- **Hooks**: camelCase con prefijo `use` (`useClusterParams.ts`)
+- **Utilidades**: camelCase (`formatClusterData.ts`)
+- **Constantes**: UPPER_SNAKE_CASE (`MAX_CLUSTER_SIZE`)
+- **Tipos**: PascalCase (`ClusterParams`, `ValidationResult`)
+
+#### Estructura de Archivos
+```typescript
+// Orden de imports
+import React from 'react';           // React imports
+import { NextRequest } from 'next';  // Next.js imports
+import { z } from 'zod';            // Third-party imports
+
+import { Button } from '@/components/ui'; // Internal imports
+import { validateParams } from '@/utils';  // Utility imports
+import type { ClusterParams } from '@/types'; // Type imports
+```
+
+#### Componentes React
+```typescript
+// Estructura estándar de componente
+interface ComponentProps {
+  // Props tipadas con TypeScript
+}
+
+export function Component({ prop1, prop2 }: ComponentProps) {
+  // 1. Hooks de estado
+  const [state, setState] = useState();
+  
+  // 2. Custom hooks
+  const { data, loading } = useCustomHook();
+  
+  // 3. Callbacks y handlers
+  const handleSubmit = useCallback(() => {
+    // Lógica del handler
+  }, [dependencies]);
+  
+  // 4. Effects
+  useEffect(() => {
+    // Side effects
+  }, [dependencies]);
+  
+  // 5. Render
+  return (
+    <div>
+      {/* JSX */}
+    </div>
+  );
+}
+```
+
+### Validación con Zod
+```typescript
+// Esquemas de validación centralizados
+const clusterParamsSchema = z.object({
+  min_cluster_size: z.number().min(2).max(1000),
+  min_samples: z.number().min(1).max(100),
+  metric: z.enum(['euclidean', 'manhattan', 'cosine']),
+  cluster_selection_epsilon: z.number().min(0).max(1)
+});
+
+// Uso en componentes
+const { errors } = useValidation(clusterParamsSchema, formData);
+
+// Uso en API routes
+export async function POST(request: Request) {
+  const body = await request.json();
+  const validParams = clusterParamsSchema.parse(body);
+  // ...
+}
+```
+
+### API Routes
+```typescript
+// Estructura estándar de API route
+export async function GET(request: NextRequest) {
+  try {
+    // 1. Validación de entrada
+    const params = validateRequestParams(request);
+    
+    // 2. Lógica de negocio
+    const result = await processRequest(params);
+    
+    // 3. Respuesta exitosa
+    return NextResponse.json({
+      success: true,
+      data: result
+    });
+  } catch (error) {
+    // 4. Manejo de errores
+    return NextResponse.json({
+      success: false,
+      error: {
+        code: 'VALIDATION_ERROR',
+        message: error.message
+      }
+    }, { status: 400 });
+  }
+}
+```
+
+## 🧪 Testing
+
+### Estructura de Tests
+```
+tests/
+├── __mocks__/           # Mocks globales
+├── components/          # Tests de componentes
+├── hooks/              # Tests de custom hooks
+├── utils/              # Tests de utilidades
+├── api/                # Tests de API routes
+└── e2e/                # Tests end-to-end
+```
+
+### Convenciones de Testing
+```typescript
+// Tests unitarios con Jest
+describe('ClusterForm', () => {
+  it('should validate parameters correctly', () => {
+    // Arrange
+    const params = { min_cluster_size: 5 };
+    
+    // Act
+    const result = validateClusterParams(params);
+    
+    // Assert
+    expect(result.isValid).toBe(true);
+  });
+});
+
+// Tests de componentes con Testing Library
+import { render, screen, fireEvent } from '@testing-library/react';
+
+test('renders cluster form with default values', () => {
+  render(<ClusterForm />);
+  expect(screen.getByLabelText(/min cluster size/i)).toBeInTheDocument();
+});
+```
+
+## 🚀 Performance
+
+### Optimizaciones de React
+- **Code Splitting**: Lazy loading de componentes pesados
+- **Memoización**: `memo`, `useMemo`, `useCallback` para componentes costosos
+- **Virtualization**: Para listas grandes de parámetros
+
+### Optimizaciones de Next.js
+- **Static Generation**: Para páginas de presets
+- **Image Optimization**: Componente `next/image`
+- **Bundle Analysis**: Análisis regular del bundle size
+
+## 🔒 Seguridad
+
+### Validación de Entrada
+- Sanitización con DOMPurify
+- Validación estricta con Zod en cliente y servidor
+- Rate limiting en API routes
+
+### Headers de Seguridad
+```typescript
+// next.config.js
+const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'X-XSS-Protection', value: '1; mode=block' },
+        ],
+      },
+    ];
+  },
+};
+```
+
+## 🌊 Git Flow y Branching
+
+### Estrategia de Branching
+- **main**: Código de producción estable
+- **develop**: Branch de integración principal
+- **feature/DNT-XXX-descripcion**: Features nuevas
+- **fix/DNT-XXX-descripcion**: Bug fixes
+- **docs/DNT-XXX-descripcion**: Documentación
+
+### Convenciones de Commit
+```
+<tipo>(<scope>): <descripción corta>
+
+<descripción detallada opcional>
+
+Closes DNT-XXX
+```
+
+**Tipos**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+**Scopes**: `setup`, `api`, `ui`, `editor`, `validation`, `database`, `test`, `docs`
+
+## 🔗 Integración con Motor de Clustering
+
+### API Endpoints Principales
+```
+GET    /api/presets              # Listar presets disponibles
+POST   /api/presets              # Crear nuevo preset
+GET    /api/presets/:id          # Obtener preset específico
+PUT    /api/presets/:id          # Actualizar preset
+DELETE /api/presets/:id          # Eliminar preset
+
+POST   /api/clusters/validate    # Validar parámetros
+POST   /api/clusters/execute     # Ejecutar clustering
+GET    /api/clusters/results/:id # Obtener resultados
+
+GET    /api/parameters/schema    # Obtener esquema de parámetros
+GET    /api/parameters/defaults  # Obtener valores por defecto
+```
+
+### Estructura de Datos
+```typescript
+interface ClusterParams {
+  // Parámetros básicos
+  min_cluster_size: number;
+  min_samples: number;
+  metric: 'euclidean' | 'manhattan' | 'cosine';
+  cluster_selection_epsilon: number;
+  
+  // Parámetros avanzados
+  hierarchical_grouping?: boolean;
+  max_inter_cluster_distance?: number;
+  balanced_clustering?: boolean;
+  
+  // Post-procesamiento
+  post_processing?: {
+    enabled: boolean;
+    min_cluster_size: number;
+    max_cluster_size: number;
+    target_clusters: number;
+  };
+}
+
+interface ClusterResult {
+  cluster_id: string;
+  parameters: ClusterParams;
+  results: {
+    clusters: Array<{
+      id: number;
+      size: number;
+      centroid: number[];
+      samples: string[];
+    }>;
+    outliers: string[];
+    metrics: {
+      silhouette_score: number;
+      calinski_harabasz_score: number;
+      davies_bouldin_score: number;
+    };
+  };
+  execution_time: number;
+  created_at: string;
+}
+```
+
+## 📚 Ejemplos de Uso
+
+### Crear Componente de Formulario
+```typescript
+// src/components/forms/ClusterForm.tsx
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { clusterParamsSchema } from '@/lib/validation';
+
+export function ClusterForm() {
+  const form = useForm({
+    resolver: zodResolver(clusterParamsSchema),
+    defaultValues: {
+      min_cluster_size: 6,
+      min_samples: 2,
+      metric: 'euclidean'
+    }
+  });
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      {/* Form fields */}
+    </form>
+  );
+}
+```
+
+### Crear Custom Hook
+```typescript
+// src/hooks/useClusterParams.ts
+export function useClusterParams() {
+  const [params, setParams] = useState(defaultParams);
+  const [isValidating, setIsValidating] = useState(false);
+
+  const validateParams = useCallback(async (newParams) => {
+    setIsValidating(true);
+    try {
+      const response = await fetch('/api/clusters/validate', {
+        method: 'POST',
+        body: JSON.stringify(newParams)
+      });
+      const result = await response.json();
+      return result;
+    } finally {
+      setIsValidating(false);
+    }
+  }, []);
+
+  return { params, setParams, validateParams, isValidating };
+}
+```
+
+### Crear API Route
+```typescript
+// src/app/api/clusters/validate/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { clusterParamsSchema } from '@/lib/validation';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const validParams = clusterParamsSchema.parse(body);
+    
+    // Validación adicional de negocio
+    const validationResult = await validateClusteringParams(validParams);
+    
+    return NextResponse.json({
+      success: true,
+      valid: validationResult.isValid,
+      errors: validationResult.errors,
+      warnings: validationResult.warnings
+    });
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      error: {
+        code: 'VALIDATION_ERROR',
+        message: error.message
+      }
+    }, { status: 400 });
+  }
+}
+```
+
+## 🎯 Patrones de Desarrollo Específicos
+
+### Editor de Parámetros Modular
+```typescript
+// Patrón compound component para flexibilidad
+<ParameterEditor>
+  <ParameterEditor.Header title="Clustering Parameters" />
+  <ParameterEditor.Body>
+    <ParameterGroup name="Core Parameters">
+      <ParameterInput name="min_cluster_size" />
+      <ParameterInput name="min_samples" />
+    </ParameterGroup>
+    <ParameterGroup name="Advanced Parameters">
+      <ParameterInput name="hierarchical_grouping" />
+      <ParameterInput name="max_inter_cluster_distance" />
+    </ParameterGroup>
+  </ParameterEditor.Body>
+  <ParameterEditor.Footer>
+    <Button variant="primary">Apply Parameters</Button>
+  </ParameterEditor.Footer>
+</ParameterEditor>
+```
+
+### Validación en Tiempo Real
+```typescript
+// Hook para validación en tiempo real
+function useRealtimeValidation(schema, data) {
+  const [errors, setErrors] = useState({});
+  
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      try {
+        schema.parse(data);
+        setErrors({});
+      } catch (error) {
+        setErrors(error.flatten().fieldErrors);
+      }
+    }, 300); // Debounce de 300ms
+    
+    return () => clearTimeout(timeoutId);
+  }, [data, schema]);
+  
+  return { errors, isValid: Object.keys(errors).length === 0 };
+}
+```
+
+## 📖 Referencias y Documentación
+
+### Documentación del Proyecto
+- [README principal](./README.md) - Información general y setup
+- [Arquitectura](./docs/architecture.md) - Arquitectura detallada
+- [Guía de contribución](./docs/contributing.md) - Cómo contribuir
+- [API Reference](./docs/api.md) - Documentación de API
+- [Deployment](./docs/deployment.md) - Guía de deployment
+
+### Referencias Externas
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [Zod Documentation](https://zod.dev/)
+- [HDBSCAN Algorithm](https://hdbscan.readthedocs.io/)
+
+### Configuración HDBSCAN
+- Ver `config.example.yaml` para configuración completa de parámetros
+- Documentación de parámetros en [docs/api.md](./docs/api.md)
+
+---
+
+## 🚨 Reglas Importantes para Cursor
+
+1. **Siempre usar TypeScript**: Todo código debe estar tipado
+2. **Validación obligatoria**: Usar Zod para toda validación de datos
+3. **Componentes modulares**: Preferir compound components y custom hooks
+4. **Performance first**: Usar memoización y code splitting cuando sea necesario
+5. **Testing obligatorio**: Todo código nuevo debe tener tests
+6. **Documentación**: Documentar funciones complejas y APIs
+7. **Convenciones de naming**: Seguir las convenciones establecidas
+8. **Git flow**: Usar branches feature/DNT-XXX para todo desarrollo
+9. **Commits semánticos**: Seguir conventional commits
+10. **Seguridad**: Validar y sanitizar toda entrada de usuario
+
+Este archivo `.cursorrules` debe ser la referencia principal para el desarrollo del proyecto. Mantenerlo actualizado con cambios en arquitectura y decisiones técnicas.
