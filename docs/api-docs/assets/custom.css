@@ -85,12 +85,40 @@ code {
   font-size: 0.875em;
 }
 
-pre code {
+pre {
   background-color: #1e293b !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+  word-wrap: normal !important;
+}
+
+pre code {
+  background-color: transparent !important;
   color: #e2e8f0 !important;
-  border: none;
-  border-radius: 8px;
-  padding: 1rem;
+  border: none !important;
+  padding: 0 !important;
+  font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  white-space: normal !important;
+  word-wrap: normal !important;
+  display: block !important;
+}
+
+/* Asegurar que los <br> en código se muestren correctamente */
+pre code br {
+  display: block !important;
+  content: "" !important;
+  margin: 0 !important;
+}
+
+/* Mejorar spacing entre líneas de código */
+pre code span {
+  display: inline !important;
 }
 
 /* Asegurar que los elementos de código no tengan fondos conflictivos */
