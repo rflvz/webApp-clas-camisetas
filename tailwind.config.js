@@ -5,6 +5,7 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class', // Usar clase para dark mode
   theme: {
     extend: {
       colors: {
@@ -19,6 +20,7 @@ module.exports = {
           700: '#1d4ed8',
           800: '#1e40af',
           900: '#1e3a8a',
+          DEFAULT: 'var(--color-primary)',
         },
         secondary: {
           50: '#f8fafc',
@@ -31,10 +33,23 @@ module.exports = {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
+          DEFAULT: 'var(--color-secondary)',
         },
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        text: {
+          DEFAULT: 'var(--color-text)',
+          secondary: 'var(--color-text-secondary)',
+        },
+        border: 'var(--color-border)',
+        error: 'var(--color-error)',
+        warning: 'var(--color-warning)',
+        success: 'var(--color-success)',
+        info: 'var(--color-info)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['Georgia', 'Times New Roman', 'serif'],
         mono: ['Fira Code', 'monospace'],
       },
       animation: {

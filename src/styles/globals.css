@@ -3,30 +3,197 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Variables CSS para colores - Tema Claro por defecto */
+    --color-primary: #3b82f6;
+    --color-secondary: #64748b;
+    --color-background: #ffffff;
+    --color-surface: #f8fafc;
+    --color-text: #0f172a;
+    --color-text-secondary: #475569;
+    --color-border: #e2e8f0;
+    --color-error: #ef4444;
+    --color-warning: #f59e0b;
+    --color-success: #10b981;
+    --color-info: #3b82f6;
+  }
+
+  .dark {
+    /* Variables CSS para colores - Tema Oscuro */
+    --color-primary: #60a5fa;
+    --color-secondary: #94a3b8;
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-border: #334155;
+    --color-error: #f87171;
+    --color-warning: #fbbf24;
+    --color-success: #34d399;
+    --color-info: #60a5fa;
+  }
+
   html {
     font-family: 'Inter', system-ui, sans-serif;
+    color-scheme: light dark;
   }
   
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Densidad de información */
+  .density-compact {
+    --spacing-unit: 0.5rem;
+    --font-size-base: 0.875rem;
+  }
+
+  .density-comfortable {
+    --spacing-unit: 1rem;
+    --font-size-base: 1rem;
+  }
+
+  .density-spacious {
+    --spacing-unit: 1.5rem;
+    --font-size-base: 1.125rem;
+  }
+
+  /* Tamaño de fuente */
+  .font-size-small {
+    font-size: 0.875rem;
+  }
+
+  .font-size-medium {
+    font-size: 1rem;
+  }
+
+  .font-size-large {
+    font-size: 1.125rem;
+  }
+
+  /* Familia de fuente */
+  .font-sans {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  .font-serif {
+    font-family: Georgia, 'Times New Roman', serif;
+  }
+
+  .font-mono {
+    font-family: 'Fira Code', 'Courier New', monospace;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    background-color: var(--color-primary);
+    color: white;
+    @apply font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-primary:hover {
+    opacity: 0.9;
   }
   
   .btn-secondary {
-    @apply bg-secondary-200 hover:bg-secondary-300 text-secondary-800 font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+    background-color: var(--color-secondary);
+    color: white;
+    @apply font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  }
+  
+  .btn-secondary:hover {
+    opacity: 0.9;
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    @apply rounded-lg shadow-sm border p-6;
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+    background-color: var(--color-background);
+    border-color: var(--color-border);
+    color: var(--color-text);
+    @apply w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2;
+  }
+
+  .input-field:focus {
+    --tw-ring-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* Utilidades para colores del tema */
+  .bg-surface {
+    background-color: var(--color-surface);
+  }
+
+  .bg-background {
+    background-color: var(--color-background);
+  }
+
+  .text-text {
+    color: var(--color-text);
+  }
+
+  .text-text-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  .border-border {
+    border-color: var(--color-border);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .text-secondary {
+    color: var(--color-secondary);
+  }
+
+  .text-error {
+    color: var(--color-error);
+  }
+
+  .text-warning {
+    color: var(--color-warning);
+  }
+
+  .text-success {
+    color: var(--color-success);
+  }
+
+  .text-info {
+    color: var(--color-info);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .bg-secondary {
+    background-color: var(--color-secondary);
+  }
+
+  .bg-error {
+    background-color: var(--color-error);
+  }
+
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
+
+  .bg-success {
+    background-color: var(--color-success);
+  }
+
+  .bg-info {
+    background-color: var(--color-info);
   }
 }
 
