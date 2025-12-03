@@ -90,3 +90,6 @@ export interface FormFieldProps {
   helperText?: string;
 }
 
+// Exportar tipos de tema
+export * from './theme';
+
